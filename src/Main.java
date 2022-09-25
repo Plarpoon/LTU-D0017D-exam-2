@@ -20,56 +20,66 @@ public class Main {
     public static void main(String[] args) {
         Scanner userInput = new Scanner(System.in); // Create a Scanner object
 
-        boolean validDate = false;
+        boolean validDate = true; // Flag to check if the date is valid
+        int day = 0;
+        int month = 0;
+        double sunHours = 0;
+
+        final double solarRadiation = 166 / 1000; // Solar radiation in W/m^2
+        final double efficiency = 0.20 * solarRadiation; // Efficiency of the solar panel in W/m^2
+        final double surface = 1.7 * 26; // Surface of the solar panel in m^2
 
         do {
-            getDate(userInput, validDate); // Call the getDate method
+            getDate(userInput, validDate, day, month); // Call the getDate method
         } while (validDate == false);
 
-        getSunAmount(userInput); // Call the method to get the sun amount
+        getSunAmount(userInput, sunHours); // Call the method to get the sun amount
 
-        userInput.close(); // Close the scanner
+        // Calculate the production of the solar panel
+        double production = solarRadiation * efficiency * surface * sunHours;
+        System.out.println("The production on " + day + "/" + month + "is:" + production + "kWh");
+
+        userInput.close();
     }
 
-    private static void getDate(Scanner userInput, boolean validDate) {
+    private static void getDate(Scanner userInput, boolean validDate, int day, int month) { // Method to get the date
         userInput.useDelimiter("-|\\s+"); // Use the delimiter to split the input
 
         System.out.print("Enter today's date [mm-dd]" + "\n");
-        int month = userInput.nextInt(); // Get the month
-        int day = userInput.nextInt(); // Read user input
-        userInput.nextLine(); // Clear the buffer
+        month = userInput.nextInt();
+        day = userInput.nextInt();
+        userInput.nextLine();
 
-        if (month == 06 || month == 07)
+        if (month == 06 || month == 07) {
             validDate = true; // If the month is June or July, the date is valid
-        else
-            System.out.println("Invalid month, it's neither June or July.");
-        // If the month is not June or July, the date is invalid
-
-        System.out.println("Month: " + month + " Day: " + day);
+        } else {
+            System.out.println("Invalid month, it's neither June nor July.");
+            // If the month is not June or July, the date is invalid
+        }
     }
 
-    private static double getSunAmount(Scanner userInput) {
+    private static double getSunAmount(Scanner userInput, double sunHours) { // Method to get the sun amount
         userInput.useDelimiter(":|\\s+"); // use space or colon as delimiter
 
         System.out.println("Enter time of sunrise [hh:mm]");
-        int sunriseHour = userInput.nextInt(); // read hour
-        int sunriseMinute = userInput.nextInt(); // read minute
-        userInput.nextLine(); // consume newline
+        int sunriseHour = userInput.nextInt();
+        int sunriseMinute = userInput.nextInt();
+        userInput.nextLine();
 
         System.out.println("Enter time of sunset [hh:mm]");
-        int sunsetHour = userInput.nextInt(); // read hour
-        int sunsetMinute = userInput.nextInt(); // read minute
-        userInput.nextLine(); // consume newline
+        int sunsetHour = userInput.nextInt();
+        int sunsetMinute = userInput.nextInt();
+        userInput.nextLine();
 
         // calculate the amount of sun time
-        double sunHours = (sunsetHour - sunriseHour) + ((sunsetMinute - sunriseMinute) / 60.0);
+        sunHours = (sunsetHour - sunriseHour) + ((sunsetMinute - sunriseMinute) / 60.0);
 
-        if (sunHours <= 0) {
+        if (sunHours <= 0) { // if sunHours is negative, add 24 hours
             System.out.println("Sunset must be after sunrise"); // error message
             System.exit(0); // exit loop
         }
 
-        System.out.println("Sun is up for " + sunHours + " hours"); // print the amount of sun time
+        System.out.println("Sun hours " + sunHours + " hours"); // print the amount of sun time
 
         return sunHours; // return the amount of sun time
     }
