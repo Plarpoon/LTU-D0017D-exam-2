@@ -1,14 +1,34 @@
 
 /**
  * ===============================================================
- * YYYY
- * YYYY
- * YYYY
+ * What does the program do:
+ * The program calculates how much money a stripe of solar cells
+ * will produce in a very specific city in Sweden at a given period.
  * ===============================================================
  * Pseudocode steps:
- * 1. XXXX
- * 2. XXXX
- * 3. XXXX
+ * Main:
+ * 1. Initialize some support local variables to zero.
+ * 2. Define the final variables given in the assignment.
+ * 3. Create a do-while loop that will run until the user enters
+ *    the correct values.
+ * 4. Recover the values from the two get methods into the local variables.
+ * 5. Calculate the total amount of money the solar cells will produce.
+ * 6. Print the result.
+ * 
+ * Get Date:
+ * 1. Read user input using the delimiter given in the assignment.
+ * 2. Check if the input is valid.
+ * 3. If the input is valid, return the input in a date array.
+ * 4. If the input is not valid, exit the program.
+ * 
+ * Get Sun Amount:
+ * 1. Read user input using the delimiter given in the assignment.
+ * 2. Calculate the total amount of sun hours.
+ * 3. Check if the time of sunrise is before the time of sunset.
+ * 4. If the time of sunrise is before the time of sunset, return the
+ *   total amount of sun hours.
+ * 5. If the time of sunrise is after the time of sunset, exit the program.
+ * 6. Return the total amount of sun hours.
  * ===============================================================
  * Alessandro Suha
  * alesuh-1
@@ -23,6 +43,7 @@ public class Main {
         int day = 0;
         int month = 0;
         double sunHours = 0;
+        int validDate = 0;
         int[] date = { 0, 0, 0 }; // Array to store the date
 
         final double solarRadiation = 166; // Solar radiation in kWh/m2
@@ -34,7 +55,7 @@ public class Main {
         double totalAreaPanels = nPanels * areaPanels; // Calculate the total area of the solar panels.
 
         do {
-            getDate(userInput, month, month, month, date); // Get the date from the user
+            getDate(userInput, month, day, validDate, date); // Get the date from the user
         } while (date[2] == 0); // Repeat until the user enters a valid date
 
         month = date[0];
@@ -63,17 +84,12 @@ public class Main {
         day = userInput.nextInt();
         userInput.nextLine();
 
-        if (month == 06 && day >= 30 && day < 1) { // Check if the date is valid
-            System.out.println("Invalid day, June has 30 days.");
-            // If the month is June and the day is greater than 30, the date is invalid
-            System.exit(1);
-        } else if (month == 07 && day >= 31 && day < 1) { // Check if the date is valid
-            System.out.println("Invalid day, July has 31 days.");
-            // If the month is July and the day is greater than 31, the date is invalid
-            System.exit(1);
+        if ((month == 06) && (day <= 30) && (day >= 1)) { // Check if the date is valid
+            validDate = 1;
+        } else if ((month == 07) && (day <= 31) && (day >= 1)) { // Check if the date is valid
+            validDate = 1;
         } else {
             System.out.println("Invalid date, be sure it's a valid day of either June or July.");
-            // If the month is not June or July, the date is invalid
             System.exit(1);
         }
 
