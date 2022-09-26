@@ -20,30 +20,42 @@ public class Main {
     public static void main(String[] args) {
         Scanner userInput = new Scanner(System.in); // Create a Scanner object
 
-        boolean validDate = false; // Flag to check if the date is valid
         int day = 0;
         int month = 0;
         double sunHours = 0;
+        int[] date = { 0, 0, 0 }; // Array to store the date
 
-        final double solarRadiation = 166 / 1000; // Solar radiation in W/m^2
-        final double efficiency = 0.20 * solarRadiation; // Efficiency of the solar panel in W/m^2
-        final double surface = 1.7 * 26; // Surface of the solar panel in m^2
+        final double solarRadiation = 166; // Solar radiation in kWh/m2
+        final double solarPanelEfficiency = 0.2; // Solar panel efficiency
+        final double electricityPrice = 0.9; // Electricity price in SEK/kWh
+        final int nPanels = 26; // Number of solar panels
+        final double areaPanels = 1.7 * 1; // Area of each solar panel in m2
+
+        double totalAreaPanels = nPanels * areaPanels; // Calculate the total area of the solar panels.
 
         do {
-            validDate = getDate(userInput, month, month, validDate); // Get the date from the user
-        } while (validDate == false);
+            getDate(userInput, month, month, month, date); // Get the date from the user
+        } while (date[2] == 0); // Repeat until the user enters a valid date
 
-        getSunAmount(userInput, surface); // Call the method to get the sun amount
+        month = date[0];
+        day = date[1];
+
+        sunHours = getSunAmount(userInput, sunHours); // Get the sun amount from the user
 
         // Calculate the production of the solar panel
-        double production = solarRadiation * efficiency * surface * sunHours;
-        System.out.println("The production on " + day + "/" + month + " is: " + production + " kWh");
-        // TODO: SEK for KwH
+        double totalProduction = (solarRadiation * sunHours * totalAreaPanels * solarPanelEfficiency) / 1000;
+
+        // Calculate the price of electricity
+        double totalCost = totalProduction * electricityPrice;
+
+        System.out.printf("The production on %d/%d is: %.2f kWh to a value of: SEK %.2f\n", day, month,
+                totalProduction,
+                totalCost);
 
         userInput.close();
     }
 
-    private static boolean getDate(Scanner userInput, int month, int day, boolean validDate) { // Method to get the date
+    private static int[] getDate(Scanner userInput, int month, int day, int validDate, int[] date) {
         userInput.useDelimiter("-|\\s+"); // Use the delimiter to split the input
 
         System.out.print("Enter today's date [mm-dd]" + "\n");
@@ -51,13 +63,25 @@ public class Main {
         day = userInput.nextInt();
         userInput.nextLine();
 
-        if (month == 06 || month == 07) {
-            validDate = true; // If the month is June or July, the date is valid
+        if (month == 06 && day >= 30 && day < 1) { // Check if the date is valid
+            System.out.println("Invalid day, June has 30 days.");
+            // If the month is June and the day is greater than 30, the date is invalid
+            System.exit(1);
+        } else if (month == 07 && day >= 31 && day < 1) { // Check if the date is valid
+            System.out.println("Invalid day, July has 31 days.");
+            // If the month is July and the day is greater than 31, the date is invalid
+            System.exit(1);
         } else {
-            System.out.println("Invalid month, it's neither June nor July.");
+            System.out.println("Invalid date, be sure it's a valid day of either June or July.");
             // If the month is not June or July, the date is invalid
+            System.exit(1);
         }
-        return validDate;
+
+        date[0] = month;
+        date[1] = day;
+        date[2] = validDate;
+
+        return date;
     }
 
     private static double getSunAmount(Scanner userInput, double sunHours) { // Method to get the sun amount
@@ -81,8 +105,8 @@ public class Main {
             System.exit(0); // exit loop
         }
 
-        System.out.println("Sun hours " + sunHours + " hours"); // print the amount of sun time
+        System.out.printf("Sun hours %.2f hours\n", sunHours); // print the amount of sun time
 
-        return sunHours; // return the amount of sun time
+        return sunHours;
     }
 }
