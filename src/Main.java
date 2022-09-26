@@ -20,7 +20,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner userInput = new Scanner(System.in); // Create a Scanner object
 
-        boolean validDate = true; // Flag to check if the date is valid
+        boolean validDate = false; // Flag to check if the date is valid
         int day = 0;
         int month = 0;
         double sunHours = 0;
@@ -30,19 +30,20 @@ public class Main {
         final double surface = 1.7 * 26; // Surface of the solar panel in m^2
 
         do {
-            getDate(userInput, validDate, day, month); // Call the getDate method
+            validDate = getDate(userInput, month, month, validDate); // Get the date from the user
         } while (validDate == false);
 
-        getSunAmount(userInput, sunHours); // Call the method to get the sun amount
+        getSunAmount(userInput, surface); // Call the method to get the sun amount
 
         // Calculate the production of the solar panel
         double production = solarRadiation * efficiency * surface * sunHours;
-        System.out.println("The production on " + day + "/" + month + "is:" + production + "kWh");
+        System.out.println("The production on " + day + "/" + month + " is: " + production + " kWh");
+        // TODO: SEK for KwH
 
         userInput.close();
     }
 
-    private static void getDate(Scanner userInput, boolean validDate, int day, int month) { // Method to get the date
+    private static boolean getDate(Scanner userInput, int month, int day, boolean validDate) { // Method to get the date
         userInput.useDelimiter("-|\\s+"); // Use the delimiter to split the input
 
         System.out.print("Enter today's date [mm-dd]" + "\n");
@@ -56,6 +57,7 @@ public class Main {
             System.out.println("Invalid month, it's neither June nor July.");
             // If the month is not June or July, the date is invalid
         }
+        return validDate;
     }
 
     private static double getSunAmount(Scanner userInput, double sunHours) { // Method to get the sun amount
