@@ -46,13 +46,13 @@ public class Main {
         int validDate = 0;
         int[] date = { 0, 0, 0 }; // Array to store the date
 
-        final double solarRadiation = 166; // Solar radiation in kWh/m2
-        final double solarPanelEfficiency = 0.2; // Solar panel efficiency
-        final double electricityPrice = 0.9; // Electricity price in SEK/kWh
-        final int nPanels = 26; // Number of solar panels
-        final double areaPanels = 1.7 * 1; // Area of each solar panel in m2
+        final double SOLARRADIATION = 166; // Solar radiation in kWh/m2
+        final double SOLARPANELEFFICIENCY = 0.2; // Solar panel efficiency
+        final double ELECTRICITYPRICE = 0.9; // Electricity price in SEK/kWh
+        final int NPANELS = 26; // Number of solar panels
+        final double AREAPANELS = 1.7 * 1; // Area of each solar panel in m2
 
-        double totalAreaPanels = nPanels * areaPanels; // Calculate the total area of the solar panels.
+        double totalAreaPanels = NPANELS * AREAPANELS; // Calculate the total area of the solar panels.
 
         do {
             getDate(userInput, month, day, validDate, date); // Get the date from the user
@@ -64,10 +64,10 @@ public class Main {
         sunHours = getSunAmount(userInput, sunHours); // Get the sun amount from the user
 
         // Calculate the production of the solar panel
-        double totalProduction = (solarRadiation * sunHours * totalAreaPanels * solarPanelEfficiency) / 1000;
+        double totalProduction = (SOLARRADIATION * sunHours * totalAreaPanels * SOLARPANELEFFICIENCY) / 1000;
 
         // Calculate the price of electricity
-        double totalCost = totalProduction * electricityPrice;
+        double totalCost = totalProduction * ELECTRICITYPRICE;
 
         System.out.printf("The production on %d/%d is: %.2f kWh to a value of: SEK %.2f\n", day, month,
                 totalProduction,
@@ -103,14 +103,19 @@ public class Main {
     private static double getSunAmount(Scanner userInput, double sunHours) { // Method to get the sun amount
         userInput.useDelimiter(":|\\s+"); // use space or colon as delimiter
 
+        int sunriseHour;
+        int sunriseMinute;
+        int sunsetHour;
+        int sunsetMinute;
+
         System.out.println("Enter time of sunrise [hh:mm]");
-        int sunriseHour = userInput.nextInt();
-        int sunriseMinute = userInput.nextInt();
+        sunriseHour = userInput.nextInt();
+        sunriseMinute = userInput.nextInt();
         userInput.nextLine();
 
         System.out.println("Enter time of sunset [hh:mm]");
-        int sunsetHour = userInput.nextInt();
-        int sunsetMinute = userInput.nextInt();
+        sunsetHour = userInput.nextInt();
+        sunsetMinute = userInput.nextInt();
         userInput.nextLine();
 
         // calculate the amount of sun time
